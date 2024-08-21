@@ -10,7 +10,7 @@ Allow only yourself to read/write/execute it:
 $ chmod 700 dns.hook
 ```
 
-Edit dns.hook, set EMAIL and KEY.
+Edit dns.hook, set KEY.
 
 Test run:
 ```

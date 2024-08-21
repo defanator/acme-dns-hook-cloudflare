@@ -23,7 +23,7 @@
 
 # Usage:
 #
-# Modify EMAIL and KEY.
+# Modify KEY.
 #
 # Invoke with `./dns.hook test yourdomain.tld` to test.
 #
@@ -34,16 +34,22 @@ import signal
 import subprocess
 import sys
 import time
+import logging
+import logging.handlers
 
-# EMAIL = Cloudflare account email
+logging.basicConfig(
+    level=logging.INFO,
+    format='dns-hook-cloudflare [%(levelname)s]: %(message)s',
+    handlers=[logging.handlers.SysLogHandler(address='/dev/log')],
+)
+
 # KEY = Cloudflare API key
 
 TIMEOUT = 60
 
 # HTTP request headers for cloudflare API.
 headers = {
-    'X-Auth-Email': EMAIL,
-    'X-Auth-Key': KEY,
+    'Authorization': f'Bearer {KEY}',
     'Content-Type': 'application/json'
 }
 
@@ -139,6 +145,8 @@ def test(domain_name):
         print('Delete record ok')
 
 def main():
+    logging.info('started with args: %s', sys.argv)
+
     if sys.argv[1] == 'test':
         test(sys.argv[2])
     elif sys.argv[1] == 'challenge-dns-start':
